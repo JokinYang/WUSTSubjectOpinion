@@ -15,14 +15,10 @@ class Jwc:
         self.usr = usr
         self.pwd = pwd or usr
         self.session = requests.session()
-        self.session.headers = {
-            'Accept': '*/*',
-            'Accept-Encoding': 'gzip,deflate',
-            'Accept-Language': 'zh - Hans - CN, zh - Hans',
-            'Connection': 'Keep-Alive',
-            'User-Agent': 'Mozilla / 5.0(Windows NT 10.0;WOW64;Trident/7.0; rv11.0) like Gecko',
-            'Referer': 'http://jwxt.wust.edu.cn/whkjdx/framework/main.jsp',
-        }
+        self.session.headers = {'Accept': '*/*', 'Accept-Encoding': 'gzip,deflate',
+                                'Accept-Language': 'zh-Hans-CN,zh-Hans', 'Connection': 'Keep-Alive',
+                                'User-Agent': 'Mozilla / 5.0(Windows NT 10.0;WOW64;Trident/7.0; rv11.0) like Gecko',
+                                'Referer': 'http://jwxt.wust.edu.cn/whkjdx/framework/main.jsp', }
         # 初始化cookies
         self.session.get('http://jwxt.wust.edu.cn/whkjdx/framework/main.jsp')
         self.scriptSessionId = None
@@ -34,15 +30,9 @@ class Jwc:
         self.usr = usr or self.usr
         self.pwd = pwd or self.pwd
         login_url = 'http://jwxt.wust.edu.cn/whkjdx/Logon.do?method=logon'
-        data = {
-            'USERNAME': self.usr,
-            'PASSWORD': self.pwd,
-            'useDogCode': '',
-            'useDogCode': '',
-            'RANDOMCODE': predict(self._get_verify_code()),
-            'x': random.randrange(1, 74),
-            'y': random.randrange(1, 22),
-        }
+        data = {'USERNAME': self.usr, 'PASSWORD': self.pwd, 'useDogCode': '', 'useDogCode': '',
+                'RANDOMCODE': predict(self._get_verify_code()), 'x': random.randrange(1, 74),
+                'y': random.randrange(1, 22), }
         response = self.session.post(url=login_url, data=data)
         if 'window.location.href=' not in response.text:
             bs = BeautifulSoup(response.text, 'lxml')
@@ -122,13 +112,11 @@ class Jwc:
         for x in pjpc.children:
             if not x['value']:
                 continue
-            default_pjpc_list.append({'value': x['value'],
-                                      'text': x.text})
+            default_pjpc_list.append({'value': x['value'], 'text': x.text})
         for x in pjkc.children:
             if not x['value']:
                 continue
-            default_pjkc_list.append({'value': x['value'],
-                                      'text': x.text})
+            default_pjkc_list.append({'value': x['value'], 'text': x.text})
 
         # useless
         # 获取教学评价的描述
@@ -144,15 +132,7 @@ class Jwc:
         # 返回包含所有教学评价的页面
         def queryJxpj(xnxq, pjpc, pjkc):
             url = 'http://jwxt.wust.edu.cn/whkjdx/jxpjgl.do?method=queryJxpj&type=xs'
-            data = {
-                'xnxq': xnxq,
-                'pjkc': pjkc,
-                'pjpc': pjpc,
-                'sfxsyjzb': 0,
-                'cmdok': '查询',
-                'zbnrstring': '',
-                'ok': ''
-            }
+            data = {'xnxq': xnxq, 'pjkc': pjkc, 'pjpc': pjpc, 'sfxsyjzb': 0, 'cmdok': '查询', 'zbnrstring': '', 'ok': ''}
             return self.session.post(url=url, data=data).text
 
         # 通过queryJxpj返回的html来寻找单个科目的教学评价链接
@@ -244,21 +224,14 @@ class Jwc:
             ans[x.tag] = [z.attrib for z in x]
         return ans
 
-    def main(self):
-        url = 'http://httpbin.org/headers'
-        self.login('201502112039', '13237191721')
-        self.subject_opinion()
-
 
 if __name__ == '__main__':
-    for x in range(201502112046, 201502112060):
-        x = 201502112060
-        pwd = '123456789'
+    for x in range(0x00000000, 0xffffffff):
+        pwd = 'your password'
         try:
             jwc = Jwc(x, pwd)
             jwc.login()
             jwc.subject_opinion()
         except Exception as e:
             print('-' * 5, e)
-        break
-# [print(x) for x in jwc.menus]
+        break  # [print(x) for x in jwc.menus]
